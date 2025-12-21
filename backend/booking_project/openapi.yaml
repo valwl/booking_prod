@@ -1,0 +1,1144 @@
+openapi: 3.0.3
+info:
+  title: ''
+  version: 0.0.0
+paths:
+  /apartments_api/apartment/:
+    get:
+      operationId: apartments_api_apartment_list
+      tags:
+      - apartments_api
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Apartment'
+          description: ''
+    post:
+      operationId: apartments_api_apartment_create
+      tags:
+      - apartments_api
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ApartmentCreateSerializers'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ApartmentCreateSerializers'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApartmentCreateSerializers'
+          description: ''
+  /apartments_api/apartment/user:
+    get:
+      operationId: apartments_api_apartment_user_retrieve
+      tags:
+      - apartments_api
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+  /apartments_api/apartment_delete/{id}/:
+    delete:
+      operationId: apartments_api_apartment_delete_destroy
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - apartments_api
+      security:
+      - jwtAuth: []
+      responses:
+        '204':
+          description: No response body
+  /apartments_api/apartment_detail/{id}/:
+    get:
+      operationId: apartments_api_apartment_detail_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - apartments_api
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Apartment'
+          description: ''
+  /apartments_api/apartment_update/{id}/:
+    put:
+      operationId: apartments_api_apartment_update_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - apartments_api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ApartmentUpdate'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ApartmentUpdate'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ApartmentUpdate'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApartmentUpdate'
+          description: ''
+    patch:
+      operationId: apartments_api_apartment_update_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - apartments_api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedApartmentUpdate'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedApartmentUpdate'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedApartmentUpdate'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApartmentUpdate'
+          description: ''
+  /apartments_api/apartments/{apartment_id}/reviews/:
+    get:
+      operationId: apartments_api_apartments_reviews_list
+      parameters:
+      - in: path
+        name: apartment_id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - apartments_api
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ReviewSerializers'
+          description: ''
+  /apartments_api/create_review/{apartment_id}/:
+    post:
+      operationId: apartments_api_create_review_create
+      parameters:
+      - in: path
+        name: apartment_id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - apartments_api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ReviewSerializers'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ReviewSerializers'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ReviewSerializers'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReviewSerializers'
+          description: ''
+  /apartments_api/location/{id}/:
+    get:
+      operationId: apartments_api_location_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - apartments_api
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Location'
+          description: ''
+  /apartments_api/locations/:
+    get:
+      operationId: apartments_api_locations_list
+      tags:
+      - apartments_api
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Location'
+          description: ''
+  /apartments_api/popular_apartment/:
+    get:
+      operationId: apartments_api_popular_apartment_retrieve
+      tags:
+      - apartments_api
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          description: No response body
+  /apartments_api/slider_image/:
+    get:
+      operationId: apartments_api_slider_image_list
+      tags:
+      - apartments_api
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SliderImg'
+          description: ''
+  /api/schema/:
+    get:
+      operationId: api_schema_retrieve
+      description: |-
+        OpenApi3 schema for this API. Format can be selected via content negotiation.
+
+        - YAML: application/vnd.oai.openapi
+        - JSON: application/vnd.oai.openapi+json
+      parameters:
+      - in: query
+        name: format
+        schema:
+          type: string
+          enum:
+          - json
+          - yaml
+      - in: query
+        name: lang
+        schema:
+          type: string
+          enum:
+          - af
+          - ar
+          - ar-dz
+          - ast
+          - az
+          - be
+          - bg
+          - bn
+          - br
+          - bs
+          - ca
+          - ckb
+          - cs
+          - cy
+          - da
+          - de
+          - dsb
+          - el
+          - en
+          - en-au
+          - en-gb
+          - eo
+          - es
+          - es-ar
+          - es-co
+          - es-mx
+          - es-ni
+          - es-ve
+          - et
+          - eu
+          - fa
+          - fi
+          - fr
+          - fy
+          - ga
+          - gd
+          - gl
+          - he
+          - hi
+          - hr
+          - hsb
+          - hu
+          - hy
+          - ia
+          - id
+          - ig
+          - io
+          - is
+          - it
+          - ja
+          - ka
+          - kab
+          - kk
+          - km
+          - kn
+          - ko
+          - ky
+          - lb
+          - lt
+          - lv
+          - mk
+          - ml
+          - mn
+          - mr
+          - ms
+          - my
+          - nb
+          - ne
+          - nl
+          - nn
+          - os
+          - pa
+          - pl
+          - pt
+          - pt-br
+          - ro
+          - ru
+          - sk
+          - sl
+          - sq
+          - sr
+          - sr-latn
+          - sv
+          - sw
+          - ta
+          - te
+          - tg
+          - th
+          - tk
+          - tr
+          - tt
+          - udm
+          - ug
+          - uk
+          - ur
+          - uz
+          - vi
+          - zh-hans
+          - zh-hant
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/vnd.oai.openapi:
+              schema:
+                type: object
+                additionalProperties: {}
+            application/yaml:
+              schema:
+                type: object
+                additionalProperties: {}
+            application/vnd.oai.openapi+json:
+              schema:
+                type: object
+                additionalProperties: {}
+            application/json:
+              schema:
+                type: object
+                additionalProperties: {}
+          description: ''
+  /booking_api/available_dates/{apartment_id}/:
+    get:
+      operationId: booking_api_available_dates_retrieve
+      parameters:
+      - in: path
+        name: apartment_id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - booking_api
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          description: No response body
+  /booking_api/bookings/:
+    get:
+      operationId: booking_api_bookings_list
+      tags:
+      - booking_api
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Booking'
+          description: ''
+    post:
+      operationId: booking_api_bookings_create
+      tags:
+      - booking_api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Booking'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Booking'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Booking'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Booking'
+          description: ''
+  /booking_api/bookings/{id}/:
+    get:
+      operationId: booking_api_bookings_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this booking.
+        required: true
+      tags:
+      - booking_api
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Booking'
+          description: ''
+    put:
+      operationId: booking_api_bookings_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this booking.
+        required: true
+      tags:
+      - booking_api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Booking'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Booking'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Booking'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Booking'
+          description: ''
+    patch:
+      operationId: booking_api_bookings_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this booking.
+        required: true
+      tags:
+      - booking_api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedBooking'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedBooking'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedBooking'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Booking'
+          description: ''
+    delete:
+      operationId: booking_api_bookings_destroy
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this booking.
+        required: true
+      tags:
+      - booking_api
+      security:
+      - jwtAuth: []
+      responses:
+        '204':
+          description: No response body
+  /booking_api/bookings/{id}/cancel/:
+    patch:
+      operationId: booking_api_bookings_cancel_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this booking.
+        required: true
+      tags:
+      - booking_api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedBooking'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedBooking'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedBooking'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Booking'
+          description: ''
+  /booking_api/bookings/{id}/pay/:
+    post:
+      operationId: booking_api_bookings_pay_create
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this booking.
+        required: true
+      tags:
+      - booking_api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Booking'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Booking'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Booking'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Booking'
+          description: ''
+  /booking_api/bookings/filter_by_status/:
+    get:
+      operationId: booking_api_bookings_filter_by_status_retrieve
+      tags:
+      - booking_api
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Booking'
+          description: ''
+  /booking_api/webhook/stripe/:
+    post:
+      operationId: booking_api_webhook_stripe_create
+      tags:
+      - booking_api
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          description: No response body
+  /user_api/login/:
+    post:
+      operationId: user_api_login_create
+      description: |-
+        Takes a set of user credentials and returns an access and refresh JSON web
+        token pair to prove the authentication of those credentials.
+      tags:
+      - user_api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MyTokenObtainPair'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/MyTokenObtainPair'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/MyTokenObtainPair'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MyTokenObtainPair'
+          description: ''
+  /user_api/logout/:
+    post:
+      operationId: user_api_logout_create
+      tags:
+      - user_api
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+  /user_api/register/:
+    post:
+      operationId: user_api_register_create
+      tags:
+      - user_api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CustomUserRegister'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/CustomUserRegister'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/CustomUserRegister'
+        required: true
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomUserRegister'
+          description: ''
+  /user_api/token/refresh/:
+    post:
+      operationId: user_api_token_refresh_create
+      tags:
+      - user_api
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          description: No response body
+  /user_api/user/password/change/:
+    post:
+      operationId: user_api_user_password_change_create
+      tags:
+      - user_api
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+  /user_api/user/update/:
+    put:
+      operationId: user_api_user_update_update
+      tags:
+      - user_api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CustomUserUpdate'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/CustomUserUpdate'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/CustomUserUpdate'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomUserUpdate'
+          description: ''
+    patch:
+      operationId: user_api_user_update_partial_update
+      tags:
+      - user_api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedCustomUserUpdate'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedCustomUserUpdate'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedCustomUserUpdate'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomUserUpdate'
+          description: ''
+components:
+  schemas:
+    Apartment:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        title:
+          type: string
+          maxLength: 255
+        description:
+          type: string
+        base_price:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,8}(?:\.\d{0,2})?$
+        weekend_price:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,8}(?:\.\d{0,2})?$
+        images:
+          type: array
+          items:
+            $ref: '#/components/schemas/ApartmentImg'
+          readOnly: true
+        user:
+          type: integer
+        location:
+          type: integer
+      required:
+      - base_price
+      - description
+      - id
+      - images
+      - location
+      - title
+      - user
+      - weekend_price
+    ApartmentCreateSerializers:
+      type: object
+      properties:
+        title:
+          type: string
+          maxLength: 255
+        description:
+          type: string
+        base_price:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,8}(?:\.\d{0,2})?$
+        weekend_price:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,8}(?:\.\d{0,2})?$
+        location:
+          type: integer
+        images:
+          type: array
+          items:
+            type: string
+          writeOnly: true
+      required:
+      - base_price
+      - description
+      - images
+      - location
+      - title
+      - weekend_price
+    ApartmentImg:
+      type: object
+      properties:
+        img:
+          type: string
+          readOnly: true
+        id:
+          type: integer
+          readOnly: true
+      required:
+      - id
+      - img
+    ApartmentUpdate:
+      type: object
+      properties:
+        title:
+          type: string
+          maxLength: 255
+        description:
+          type: string
+        base_price:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,8}(?:\.\d{0,2})?$
+        weekend_price:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,8}(?:\.\d{0,2})?$
+        images:
+          type: string
+          readOnly: true
+        removed_images:
+          type: array
+          items:
+            type: integer
+          writeOnly: true
+      required:
+      - base_price
+      - description
+      - images
+      - title
+      - weekend_price
+    Booking:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        checkin_day:
+          type: string
+          format: date-time
+        checkout_day:
+          type: string
+          format: date-time
+        total_price:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,8}(?:\.\d{0,2})?$
+        paid:
+          type: boolean
+        status:
+          $ref: '#/components/schemas/StatusEnum'
+        create:
+          type: string
+          format: date-time
+          readOnly: true
+        apartment:
+          type: integer
+        user:
+          type: integer
+      required:
+      - apartment
+      - checkin_day
+      - checkout_day
+      - create
+      - id
+      - total_price
+      - user
+    CustomUserRegister:
+      type: object
+      properties:
+        phone_number:
+          type: string
+        email:
+          type: string
+          format: email
+          nullable: true
+          maxLength: 254
+        password:
+          type: string
+          writeOnly: true
+        first_name:
+          type: string
+          maxLength: 255
+        last_name:
+          type: string
+          maxLength: 255
+      required:
+      - first_name
+      - last_name
+      - password
+    CustomUserUpdate:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+        phone_number:
+          type: string
+        first_name:
+          type: string
+          maxLength: 255
+        last_name:
+          type: string
+          maxLength: 255
+      required:
+      - first_name
+      - last_name
+    Location:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          maxLength: 255
+        description:
+          type: string
+        images:
+          type: array
+          items:
+            $ref: '#/components/schemas/LocationsImgSerializers'
+          readOnly: true
+      required:
+      - description
+      - id
+      - images
+      - name
+    LocationsImgSerializers:
+      type: object
+      properties:
+        img:
+          type: string
+          format: uri
+          nullable: true
+    MyTokenObtainPair:
+      type: object
+      properties:
+        login:
+          type: string
+          writeOnly: true
+        password:
+          type: string
+          writeOnly: true
+      required:
+      - login
+      - password
+    PatchedApartmentUpdate:
+      type: object
+      properties:
+        title:
+          type: string
+          maxLength: 255
+        description:
+          type: string
+        base_price:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,8}(?:\.\d{0,2})?$
+        weekend_price:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,8}(?:\.\d{0,2})?$
+        images:
+          type: string
+          readOnly: true
+        removed_images:
+          type: array
+          items:
+            type: integer
+          writeOnly: true
+    PatchedBooking:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        checkin_day:
+          type: string
+          format: date-time
+        checkout_day:
+          type: string
+          format: date-time
+        total_price:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,8}(?:\.\d{0,2})?$
+        paid:
+          type: boolean
+        status:
+          $ref: '#/components/schemas/StatusEnum'
+        create:
+          type: string
+          format: date-time
+          readOnly: true
+        apartment:
+          type: integer
+        user:
+          type: integer
+    PatchedCustomUserUpdate:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+        phone_number:
+          type: string
+        first_name:
+          type: string
+          maxLength: 255
+        last_name:
+          type: string
+          maxLength: 255
+    ReviewSerializers:
+      type: object
+      properties:
+        apartment:
+          type: integer
+        rating:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: 0
+          format: int64
+        text:
+          type: string
+        author:
+          type: string
+          readOnly: true
+      required:
+      - apartment
+      - author
+      - rating
+      - text
+    SliderImg:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        image:
+          type: string
+          format: uri
+          nullable: true
+      required:
+      - id
+    StatusEnum:
+      enum:
+      - pending
+      - paid
+      - complete
+      - cancelled
+      type: string
+      description: |-
+        * `pending` - Pending
+        * `paid` - Paid
+        * `complete` - Complete
+        * `cancelled` - Cancelled
+  securitySchemes:
+    jwtAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

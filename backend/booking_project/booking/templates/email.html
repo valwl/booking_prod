@@ -1,0 +1,13 @@
+<!-- booking_email_template.html -->
+<html>
+<body>
+<h1>Ваше бронирование успешно создано!</h1>
+<p>Детали бронирования:</p>
+<ul> <li>Апартаменты: {{ booking.apartment_name }}</li>
+    <li>Дата заезда: {{ booking.check_in }}</li>
+    <li>Дата выезда: {{ booking.check_out }}</li>
+    <li>Стоимость: {{ booking.total_price }}</li>
+</ul>
+<p>Спасибо, что выбрали нас!</p>
+</body>
+</html>

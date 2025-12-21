@@ -1,0 +1,152 @@
+.apartmentDetailPage {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+
+  background-color: #e6ecec;
+
+  .sliderContainer {
+    width: 100%;
+    margin-bottom: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    .mainSlider {
+      width: 70%;
+      height: 600px;
+      position: relative;
+      img {
+        width: 100%;
+        height: 100%;
+        border-radius: 15px;
+        box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.2);
+        object-fit: cover; // new
+      }
+    }
+
+    .sidePhotoContainer {
+      width: 20%;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-left: 20px;
+      max-height: 600px;
+      overflow-y: auto;
+
+      .thumbnail {
+        width: 100%;
+        cursor: pointer;
+        border-radius: 5px;
+        transition: transform 0.3s ease;
+
+        &:hover {
+          transform: scale(1.05);
+        }
+
+        &.active {
+          border: 2px solid #3498db;
+        }
+      }
+    }
+  }
+
+  .apartmentInfoContainer {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    margin-bottom: 50px;
+
+    .leftSide {
+      flex: 2;
+      margin-right: 30px;
+
+      .apartmentTitle {
+        font-size: 2.5rem;
+        margin-bottom: 20px;
+        color: #2c3e50;
+      }
+
+      .apartmentDescription {
+        font-size: 1.2rem;
+        color: #34495e;
+        line-height: 1.5;
+        background-color: #d8e4e5;
+        padding: 15px;
+        border-radius: 15px;
+
+        &:hover {
+          transform: translateY(-10px);
+        }
+      }
+    }
+
+    .rightSide {
+      flex: 1;
+      position: relative;
+
+      .priceContainer {
+        background: #f7f7f7;
+        padding: 25px; // увеличиваем padding
+        border: 2px solid #dcdcdc;
+        border-radius: 15px;
+        margin-bottom: 20px;
+        box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.05); // лёгкий эффект тени
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 15px;
+
+        h3 {
+          margin: 0;
+          font-size: 1.8rem; // больше размер текста
+          font-weight: 600;
+
+          &.basePrice {
+            color: #27ae60; // зелёный цвет для базовой цены
+          }
+
+          &.weekendPrice {
+            color: #e74c3c; // красный для выходной цены
+          }
+        }
+
+        &:hover {
+          transform: translateY(-8px);
+        }
+      }
+    }
+  }
+
+  .reviewsContainer {
+    width: 100%;
+    margin-top: 50px;
+
+    h2 {
+      font-size: 2rem;
+      margin-bottom: 20px;
+      color: #333;
+    }
+
+    .reviewItem {
+      padding: 15px;
+      border-bottom: 1px solid #eee;
+
+      p {
+        margin: 0;
+        font-size: 1rem;
+        color: #666;
+      }
+    }
+
+    .noReviews {
+      font-size: 1.2rem;
+      color: #999;
+      text-align: center;
+    }
+  }
+}
+

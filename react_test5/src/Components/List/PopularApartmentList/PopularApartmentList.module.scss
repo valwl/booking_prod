@@ -1,0 +1,30 @@
+.PopularApartmentList {
+  // display: flex;
+  overflow: hidden;
+  padding: 20px;
+  position: relative;
+  width: 100%; // я думаю что это как то связанно с обшей шириной
+  height: 500px; /* Высота, подходящая для ваших карточек */
+
+  .carousel {
+    display: flex;
+    animation: scrollLeftToRight 17s linear infinite;
+    gap: 100px;
+    width: max-content;
+
+    position: relative; // это свойство работает как то странно , из-зв него плохо работает ширина карточек
+
+    &:hover {
+      animation-play-state: paused; /* Останавливаем анимацию при наведении */
+    }
+  }
+
+  @keyframes scrollLeftToRight {
+    0% {
+      transform: translateX(-100%);
+    }
+    100% {
+      transform: translateX(100%);
+    }
+  }
+}

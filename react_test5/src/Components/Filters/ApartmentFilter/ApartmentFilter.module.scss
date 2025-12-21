@@ -1,0 +1,33 @@
+.apartmentFilter {
+  display: flex;
+  flex-direction: row;
+  padding: 20px;
+  width: 100%;
+  justify-content: space-between;
+  align-items: center;
+
+  &:hover {
+    transform: translateY(-5px);
+  }
+}
+
+.filterGroup {
+  margin-bottom: 20px;
+}
+
+input,
+select {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 15px;
+  font-size: 16px;
+  transition: border-color 0.2s ease-in-out;
+}
+
+input:focus,
+select:focus {
+  border-color: #007bff;
+  outline: none;
+}
+

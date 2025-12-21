@@ -1,0 +1,130 @@
+// .reviewCreatePage {
+//   min-height: 800px;
+//   background-color: aliceblue;
+//   display: flex;
+//   align-items: center;
+//   justify-content: center;
+
+//   .reviewForm {
+//     display: flex;
+//     flex-direction: column;
+//     width: 800px;
+//     gap: 60px;
+//     //margin-top: 100px;
+//     //margin-left: 350px;
+//     background-color: #ebebd7;
+//     border-radius: 20px;
+//     //height: 600px;
+
+//     &:hover {
+//       transform: translateY(-5px);
+//     }
+
+//     .reviewEria {
+//       border-radius: 15px;
+
+//       &:hover {
+//         transform: translateY(-5px);
+//         border-bottom: #d9e7d4; // why blue colour
+//       }
+//     }
+
+//     .reviewButton {
+//       border: 1px solid #ddd;
+//       padding: 10px;
+//       border-radius: 25px;
+//       cursor: pointer;
+//       margin-right: 10px;
+//       background-color: #c6f9b6;
+//       color: white;
+//       width: 350px;
+//       font-size: 20px;
+//       margin-left: 170px;
+
+//       &:hover {
+//         background-color: #f6c5be;
+//         color: white;
+//         transform: translateY(-5px);
+//       }
+//     }
+//   }
+// }
+
+
+
+.reviewCreatePage {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background-color: #d5e3e5;
+
+  .reviewForm {
+    display: flex;
+    flex-direction: column;
+    width: 500px;
+    gap: 20px;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 30px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+
+    &:hover {
+      transform: translateY(-5px);
+    }
+
+    input {
+      width: 100%;
+      padding: 10px;
+      margin: 10px 0;
+      border: 1px solid #bfc3b6;
+      border-radius: 18px;
+      font-size: 16px;
+
+      &:hover {
+        transform: translateY(-3px);
+      }
+    }
+  }
+
+  .selctionButton {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #bfc3b6;
+    border-radius: 18px;
+    font-size: 16px;
+
+    &:hover {
+      transform: translateY(-3px);
+    }
+  }
+
+  .reviewEria {
+    height: 150px;
+    width: 80%;
+    align-self: center;
+    border-radius: 15px;
+    &:hover {
+      transform: translateY(-5px);
+    }
+  }
+
+  .reviewButton {
+    width: 100%;
+    padding: 12px;
+    background-color: #abe6ac;
+    color: white;
+    border: none;
+    border-radius: 14px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+
+    &:hover {
+      background-color: #e2afba;
+      transform: translateY(-3px);
+    }
+  }
+}

@@ -1,8 +1,10 @@
 import axios from 'axios';
+import api from './axiosInstance';
 
 export const createBooking = async (bookingData) => {
   try {
     const token = localStorage.getItem('accessToken');
+    console.log(bookingData);
     const response = await axios.post(
       'http://127.0.0.1:8080/booking_api/bookings/',
       bookingData,
@@ -35,7 +37,7 @@ export const getAvailableDate = async (apartmentId) => {
 export const cancelBooking = async (bookingId) => {
   const token = localStorage.getItem('accessToken');
   try {
-    const response = await axios.patch(
+    const response = await axios.post(
       `http://127.0.0.1:8080/booking_api/bookings/${bookingId}/cancel/`,
       {},
       {
@@ -50,19 +52,39 @@ export const cancelBooking = async (bookingId) => {
   }
 };
 
+// export const getUserBookingDetail = async (bookingId) => {
+//   const token = localStorage.getItem('accessToken');
+//   try {
+//     const response = await axios.get(
+//       `http://127.0.0.1:8080/booking_api/bookings/${bookingId}`,
+//       {
+//         headers: {
+//           Authorization: `Bearer ${token}`,
+//         },
+//       }
+//     );
+//     return response;
+//   } catch (error) {
+//     console.error('Error creating booking', error);
+//   }
+// };
+
 export const getUserBookingDetail = async (bookingId) => {
-  const token = localStorage.getItem('accessToken');
+  // const token = localStorage.getItem('accessToken');
   try {
-    const response = await axios.get(
-      `http://127.0.0.1:8080/booking_api/bookings/${bookingId}`,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
+    const response = await api.get(
+      //`http://127.0.0.1:8080/booking_api/bookings/${bookingId}`,
+      `/booking_api/bookings/${bookingId}/`
+      // {
+      //   headers: {
+      //     Authorization: `Bearer ${token}`,
+      //   },
+      // }
     );
     return response;
   } catch (error) {
     console.error('Error creating booking', error);
   }
 };
+
+

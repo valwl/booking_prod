@@ -72,20 +72,16 @@ const BookingDetail = () => {
 
       <div className={styles.bookingInfo}>
         <h2>Booking information</h2>
-        <h3>
-          Check-in-day: {new Date(booking.checkin_day).toLocaleDateString()}
-        </h3>
-        <h3>
-          Check-out-day: {new Date(booking.checkout_day).toLocaleDateString()}
-        </h3>
+
+        <h3>Check-in-day: {booking.checkin_day}</h3>
+        <h3>Check-out-day: {booking.checkout_day}</h3>
         <h3>Total price: {booking.total_price}</h3>
-        <h3>Status: {bookingStatus}</h3>
+        <h3>status: {booking.status}</h3>
       </div>
 
       <div className={styles.actions}>
         {bookingStatus === 'pending' && (
           <div className={styles.pendingList}>
-
             <p className={styles.timerDisplay}>Time Left: {formatedTimeLeft}</p>
 
             <StripeCheckOutButton

@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import BookingCard from '../../../Components/Card/BookingCard/BookingCard';
 import styles from './MyBookings.module.scss';
 import { useWebSocket } from '../../../services/WebSocketContext';
+import api from '../../../services/axiosInstance';
 
 const MyBookings = () => {
   const navigate = useNavigate();
@@ -18,19 +19,21 @@ const MyBookings = () => {
   const fetchBookingList = async () => {
     const token = localStorage.getItem('accessToken');
     try {
-      const response = await axios.get(
-        'http://127.0.0.1:8080/booking_api/bookings/',
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
+      const response = await api.get(
+        //'http://127.0.0.1:8080/booking_api/bookings/',
+        '/booking_api/bookings/'
+        // {
+        //   headers: {
+        //     Authorization: `Bearer ${token}`,
+        //   },
+        // }
       );
+      console.log(response);
       const filteredBoobings = response.data.filter(
         (booking) => booking.status !== 'cancelled'
       );
       setBookings(filteredBoobings);
-      console.log(response);
+      console.log(filteredBoobings);
     } catch (error) {
       console.error('error:', error);
     }

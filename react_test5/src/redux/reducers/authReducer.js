@@ -1,6 +1,7 @@
 const initialState = {
   isAuthenticated: false,
   token: '',
+  refresh_token: '', // new
   user: {
     email: '',
     first_name: '',
@@ -15,17 +16,21 @@ const authReducer = (state = initialState, action) => {
   switch (action.type) {
     case 'USER_REGISTER_SUCCESS':
     case 'USER_LOGIN_SUCCESS':
-      localStorage.setItem('accessToken', action.payload.access);
+      const { access, refresh } = action.payload.tokens;
+      const { email, first_name, last_name, phone_number, id } =
+        action.payload.user;
+      localStorage.setItem('accessToken', access);
+      localStorage.setItem('refreshToken', refresh);
       return {
         ...state,
         isAuthenticated: true,
-        token: action.payload.access,
+        token: access,
         user: {
-          email: action.payload.email,
-          first_name: action.payload.first_name,
-          last_name: action.payload.last_name,
-          phone_number: action.payload.phone_number,
-          id: action.payload.id,
+          email: email,
+          first_name: first_name,
+          last_name: last_name,
+          phone_number: phone_number,
+          id: id,
         },
         error: null,
       };
@@ -39,6 +44,7 @@ const authReducer = (state = initialState, action) => {
 
     case 'USER_LOGOUT':
       localStorage.removeItem('accessToken');
+      localStorage.removeItem('refreshToken');
       return {
         ...state,
         isAuthenticated: false,

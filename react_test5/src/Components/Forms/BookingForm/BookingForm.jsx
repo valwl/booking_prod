@@ -18,7 +18,7 @@ const BookingForm = ({ apartmentId }) => {
     checkOutDay: null,
     totalPrice: 0,
     guests: { adults: 1, children: 0, pets: 0 },
-    apartmentId: apartmentId, // new 
+    apartmentId: apartmentId, // new
   };
 
   const [formData, setFormData] = useState(initialFormData);
@@ -52,10 +52,13 @@ const BookingForm = ({ apartmentId }) => {
         console.log(response);
 
         setBlockedDates(
-          Array.isArray(response.data.blocked_date)
-            ? response.data.blocked_date.map((date) => moment(date))
+          Array.isArray(response.data.blocked_dates)
+            ? response.data.blocked_dates.map((date) =>
+                moment(date, 'YYYY-MM-DD')
+              )
             : []
         );
+        console.log(blockedDates);
       } catch (error) {
         console.error('Error fetching available dates', error);
       }
@@ -107,7 +110,7 @@ const BookingForm = ({ apartmentId }) => {
         ...prevFormData.guests,
         [field]: value,
       },
-    }));
+    })); // может ошибка в форме здесь ?
   };
 
   const isRangeInvalid = (startDate, endDate) => {
@@ -162,6 +165,12 @@ const BookingForm = ({ apartmentId }) => {
       checkOutDay: formData.checkOutDay
         ? formData.checkOutDay.format('YYYY-MM-DD')
         : null,
+      guests: formData.guests,
+      // guests: {
+      //   adults: initialFormData.guests.adults,
+      //   children: initialFormData.guests.children,
+      //   pets: initialFormData.guests.pets,
+      // }
     };
     try {
       if (isAuthenticated) {
@@ -188,7 +197,7 @@ const BookingForm = ({ apartmentId }) => {
       checkInDay: null,
       checkOutDay: null,
       totalPrice: 0,
-      guests: { adults: 1, childrens: 0, pets: 1 },
+      guests: { adults: 1, children: 0, pets: 1 },
     });
     setFocusedInput(null);
     setError('');

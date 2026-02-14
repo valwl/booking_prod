@@ -29,8 +29,8 @@ export const createStripeCheckOutSession = async ({ id, formData }) => {
     //   sessionId: session_id,
     // });
 
-    const { checkOutUrl } = response.data;
-    window.open(checkOutUrl, '_blank');
+    const { checkout_url } = response.data;
+    window.open(checkout_url, '_blank');
 
     // if (result.error) {
     //   console.error(result.error.message);

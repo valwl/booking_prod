@@ -1,100 +1,128 @@
 import stripe
-from datetime import datetime, timedelta
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import action, api_view
 from rest_framework import status
 from rest_framework import viewsets
-from . serializers import BookingSerializer
-from . models import Booking, Payment, UnavailableDate
-from apartments.models import Apartment
 from django.conf import settings
-from .utils import send_booking_email
-from .payment_service import PaymentService
+
+from .models.booking import Booking
+from . serializers import BookingCreateSerializer, BookingDetailSerializer, BookingListSerializer, AvailabilitySerializer
+from .services.booking.booking_create import create_booking
+from .services.booking.booking_cancel import cancel_booking
+from .services.payment.start_booking_payment import start_or_get_booking_payment
+from .services.availability_service import AvailabilityService
+from .selectors.booking_selectors import get_user_bookings, get_booking_by_id
+from booking.selectors.booking_selectors import get_user_bookings
+
+from apartments.models.apartments import Apartment
 
 stripe.api_key = settings.STRIPE_SECRET_KEY
 
 
 
 
-@api_view(['GET'])
-def check_booking_status(request, booking_id):
-    try:
-        booking = Booking.objects.get(id=booking_id)
-        return Response({'status': booking.status}, status=200)
-    except Booking.DoesNotExist:
-        return Response({'error': 'Booking not found'}, status=404)
-
-
-
-class BookingViewSet(viewsets.ModelViewSet):
-    queryset = Booking.objects.all()
-    serializer_class = BookingSerializer
+class BookingViewSet(viewsets.ViewSet):
     permission_classes = [IsAuthenticated]
+    queryset = Booking.objects.all()
 
-    def perform_create(self, serializer):
-        booking = serializer.save(user=self.request.user)
-        booking.calculate_total_price()
-        booking.save()
+    def get_gueryset(self):
+        status = self.request.query_params.get("status") # для чешо нужна жта строка
+        return get_user_bookings(user=self.request.user, status=status)
 
-        current_date = booking.checkin_day
-        while current_date < booking.checkout_day:
-            UnavailableDate.objects.create(apartment=booking.apartment, date=current_date)
-            current_date += timedelta(days=1)
+    def get_serializer_class(self):
+        if self.action == 'list':
+            return BookingListSerializer
+        if self.action == 'create':
+            return BookingCreateSerializer
+        return BookingDetailSerializer
 
-    @action(detail=True, methods=['post'], permission_classes=[IsAuthenticated])
-    def pay(self, request, pk=None):
-        booking = self.get_object()
-        if booking.status == 'pending':
-            checkOutUrl = PaymentService.create_checkout_session(booking)
-            return Response({'checkOutUrl': checkOutUrl})
-        return Response({'error': 'Invalid booking status'}, status=status.HTTP_400_BAD_REQUEST)
 
-    def get_queryset(self):
-        return self.queryset.filter(user=self.request.user)
-
-    @action(detail=False, methods=['get'])
-    def filter_by_status(self, request):
-        status = request.query_params.get('status')
-        if status:
-            bookings = self.get_queryset().filter(status=status)
-        else:
-            bookings = self.get_queryset()
-        serializer = self.get_serializer(bookings, many=True)
+    def list(self, request):
+        """
+        user booking list
+        """
+        bookings = get_user_bookings(user=request.user)
+        serializer = BookingListSerializer(bookings, many=True)
         return Response(serializer.data)
 
-    @action(detail=True, methods=['patch'], permission_classes=[IsAuthenticated])
+    def create(self, request):
+        """
+        create booking
+        """
+        serializer = BookingCreateSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        booking = create_booking(
+            user=request.user,
+            apartment=serializer.validated_data["apartment"],
+            checkin=serializer.validated_data["checkin_day"],
+            checkout=serializer.validated_data["checkout_day"],
+        )
+
+        checkout_url = start_or_get_booking_payment(booking=booking)
+
+        return Response(
+            {
+                "booking": BookingDetailSerializer(booking).data,
+                "checkout_url": checkout_url,
+            },
+            status=status.HTTP_201_CREATED,
+        )
+
+    def retrieve(self, request, pk=None):
+        booking = get_booking_by_id(pk)
+        serializer = BookingDetailSerializer(booking)
+        return Response(serializer.data)
+
+# method=['post']
+
+    @action(detail=True, methods=['post'])
     def cancel(self, request, pk=None):
-        booking = self.get_object()
-        if booking.status in ['pending']:
-            booking.cancel()
-            return Response({'status': 'booking cancelled'})
-        return Response({'error': 'Cannot cancel this booking'}, status=status.HTTP_400_BAD_REQUEST)
+        """
+        cancel booking
+        """
+        # booking = get_booking_by_id(pk, user=request.user)
+        booking = get_booking_by_id(pk)
+        cancel_booking(booking=booking)
+        return Response(
+            {"status": "booking canceled"},
+            status=status.HTTP_200_OK
+        )
 
 
 
 
+    @action(detail=True, methods=['post'])
+    def pay(self, request, pk=None):
+        """
+        get payment url
+        """
+        booking = get_booking_by_id(pk, user=request.user)
+        if booking.status == 'pending':
+            checkout_url = start_or_get_booking_payment(booking=booking)
+            return Response({'checkout_url': checkout_url}, status=status.HTTP_200_OK)
+        return Response({'error': 'Invalid booking status'}, status=status.HTTP_400_BAD_REQUEST)
 
 
-@api_view(['GET'])
-def get_available_date(request, apartment_id):
+
+@api_view(["GET"])
+def get_apartment_availability(request, apartment_id):
+    """
+    Returns availability calendar for apartment
+    """
     try:
         apartment = Apartment.objects.get(id=apartment_id)
     except Apartment.DoesNotExist:
-        return Response({'error': 'apartment not found'}, status=404)
-
-    today = datetime.today()
-    end_date = today + timedelta(days=90)
-    all_dates = {today + timedelta(days=1) for i in range((end_date - today).days)}
-    unavailable_dates = UnavailableDate.objects.filter(apartment=apartment, date__lt=end_date)
-    booked_dates = {ud.date.date() for ud in unavailable_dates}
-    available_dates = all_dates - booked_dates
-    # print(Response({'available_dates': list(available_dates)}))
-    available_dates_list = [date.strftime('%Y-%m-%d') for date in available_dates]
-    booked_dates_list = [date.strftime('%Y-%m-%d') for date in booked_dates]
-    return Response({'available_dates': available_dates_list,
-                     'blocked_date': booked_dates_list})
+        return Response(
+            {"detail": "Apartment not found"},
+            status=status.HTTP_404_NOT_FOUND,
+        )
+    availability = AvailabilityService.get_availability(
+        apartment=apartment
+    )
+    serializer = AvailabilitySerializer(availability)
+    return Response(serializer.data, status=status.HTTP_200_OK)
 
 
-
-
+# список задас что остается
+# 1. payment закрыли страницу нужен url

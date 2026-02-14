@@ -53,11 +53,18 @@ const ReviewForm = () => {
         console.log('review creation success');
       }
     } catch (error) {
-      console.error('error with add review', error.responce.data.message);
+      if (error.response) {
+        console.log(error);
+        alert(error.response.data.detail);
+
+        navigate('/home');
+      }
+      //console.error('error with add review', error.responce.data.message);
+      console.error('error with add review', error);
     }
   };
 
-  console.log(formData.author)
+  console.log(formData.author);
   return (
     <div className={styles.reviewCreatePage}>
       <form onSubmit={handleSubmit} className={styles.reviewForm}>

@@ -14,7 +14,7 @@ const BookingCancelButton = ({ bookingId }) => {
     e.preventDefault();
     const token = localStorage.getItem('accessToken');
     try {
-      const response = await axios.patch(
+      const response = await axios.post(
         `http://127.0.0.1:8080/booking_api/bookings/${bookingId}/cancel/`,
         {},
         {

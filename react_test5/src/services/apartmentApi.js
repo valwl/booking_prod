@@ -1,4 +1,5 @@
 import axios from 'axios';
+import api from '../services/axiosInstance';
 
 export const getAllApartment = async () => {
   try {
@@ -14,13 +15,14 @@ export const getAllApartment = async () => {
 export const getUserApartment = async () => {
   const token = localStorage.getItem('accessToken');
   try {
-    const response = await axios.get(
-      'http://127.0.0.1:8080/apartments_api/apartment/user',
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
+    const response = await api.get(
+      //'http://127.0.0.1:8080/apartments_api/apartment/user',
+      '/apartments_api/apartment/user'
+      // {
+      //   headers: {
+      //     Authorization: `Bearer ${token}`,
+      //   },
+      // }
     );
     return response.data || [];
   } catch (error) {
@@ -62,8 +64,6 @@ export const apartmentDelete = async (apartmentId) => {
     console.error('Errro fetching user apartment', error);
   }
 };
-
-
 
 export const apartmentCreate = async (formData) => {
   const token = localStorage.getItem('accessToken');

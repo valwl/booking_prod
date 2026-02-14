@@ -13,6 +13,9 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 from pathlib import Path
 from datetime import timedelta
 import os
+from celery.schedules import crontab
+from dotenv import load_dotenv
+load_dotenv()
 
 print(f"DJANGO_SETTINGS_MODULE is set to: {os.getenv('DJANGO_SETTINGS_MODULE')}")
 
@@ -52,8 +55,6 @@ INSTALLED_APPS = [
     'debug_toolbar',
     'drf_spectacular',
 
-
-
     'users',
     'apartments',
     'booking',
@@ -68,6 +69,7 @@ ASGI_APPLICATION = "booking_project.asgi.application"
 # Канальные слои (например, Redis)
 CHANNEL_LAYERS = {
     "default": {
+        # "BACKEND": "channels.layers.InMemoryChannelLayer"
         "BACKEND": "channels_redis.core.RedisChannelLayer",
         "CONFIG": {
             "hosts": [("127.0.0.1", 6379)],  # Адрес и порт вашего Redis сервера
@@ -215,7 +217,7 @@ REST_FRAMEWORK = {
 
 
 SIMPLE_JWT = {
-    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=5),
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=10),
     "REFRESH_TOKEN_LIFETIME": timedelta(days=7),
     "ROTATE_REFRESH_TOKENS": False,
     "BLACKLIST_AFTER_ROTATION": False,
@@ -267,14 +269,22 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 
 
-CELERY_BROKER_URL = 'redis://localhost:6739/0'
-CELERY_RESULT_BACKEND = 'redis://localhost:6739/0'
+CELERY_BROKER_URL = 'redis://localhost:6379/0'
+CELERY_RESULT_BACKEND = 'redis://localhost:6379/0'
 
 
 CELERY_ACCEPT_CONTENT = ['json']
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
 CELERY_TIMEZONE = 'UTC'
+
+INSTALLED_APPS += ['django_celery_beat']
+CELERY_BEAT_SCHEDULE = {
+    "complete_finishing_booking_evry_night": {
+        "task": 'booking.task.complete_finished_bookings',
+        "schedule": crontab(hour=3, minute=0)
+    }
+}
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend',
 EMAIL_HOST = 'smtp.gmail.com'
@@ -284,6 +294,29 @@ EMAIL_HOST_USER = 'ваш_email@gmail.com'
 EMAIL_HOST_PASSWORD = 'ваш_пароль'
 
 STRIPE_PUBLIC_KEY = 'pk_test_51NwzRzEoF28QzXkJWP2wxv7dHcCqcLV3AQmIy2wUBPjyhz9oo2WlqST3y5i819uKXp9ck8sGTXmsvlIeqphfEWFR00t7v0GCPw'
-STRIPE_SECRET_KEY = os.getenv('STRIPE_SECRET_KEY')
-STRIPE_WEBHOOK_SECRET = os.getenv('STRIPE_WEBHOOK_SECRET')
 
+
+
+STRIPE_WEBHOOK_SECRET = os.getenv('STRIPE_WEBHOOK_SECRET')
+STRIPE_SECRET_KEY = os.getenv('STRIPE_SECRET_KEY')
+
+# CELERY_BEAT_SCHEDULE = {
+#     "expire-pending-bookings-every-5-minutes": {
+#         "task": "booking.tasks.expire_pending_bookings",
+#         "schedule": 300,
+#     },
+#     "complete-bookings-every-hour": {
+#         "task": "booking.tasks.complete_finished_bookings",
+#         "schedule": 3600,
+#     },
+# }
+
+
+# celery run
+
+#celery -A backend worker -l info
+#celery -A backend beat -l info
+
+#Или одним процессом
+
+#celery -A backend worker -B -l info

@@ -1,7 +1,7 @@
 import React from 'react';
 import styles from './PopularApartmentCard.module.scss';
 import BaseSlider from '../../Slider/BaseSlider/BaseSlider';
-import { useParams, useNavigate } from 'react-router';
+
 
 const PopularApartmentCard = ({ images, title, onMoreDetails }) => {
   return (
@@ -27,3 +27,4 @@ const PopularApartmentCard = ({ images, title, onMoreDetails }) => {
 };
 
 export default PopularApartmentCard;
+

@@ -11,9 +11,10 @@ import os
 from django.core.asgi import get_asgi_application
 from channels.auth import AuthMiddlewareStack
 from channels.routing import ProtocolTypeRouter, URLRouter
+# from backend.booking_project.booking.routing import websocket_urlpatterns
 from booking.routing import websocket_urlpatterns
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'booking_project.settings')
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'booking_project.booking_project.settings')
 
 application = ProtocolTypeRouter({
     "http": get_asgi_application(),
@@ -23,7 +24,3 @@ application = ProtocolTypeRouter({
         )
     ),
 })
-
-
-
-

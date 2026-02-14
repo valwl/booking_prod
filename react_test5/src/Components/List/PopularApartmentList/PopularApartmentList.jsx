@@ -20,9 +20,11 @@ const PopularApartmentList = () => {
           ...apartment,
           id: apartment.id.toString(),
           base_price: Number(apartment.base_price),
-          images: apartment.images.map(
-            (image) => `http://127.0.0.1:8080${image.img}`
-          ),
+          // images: apartment.images.map(
+          //   (image) => `http://127.0.0.1:8080${image.img}`
+          // ), не работающий вариант ! 
+          // images: apartment.images.map((imgObj) => imgObj.img),
+          images: apartment.images.map((img) => img.img),
         }));
 
         setApartments(processedData);

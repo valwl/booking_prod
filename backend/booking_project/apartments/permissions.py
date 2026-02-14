@@ -1,6 +1,6 @@
 from rest_framework.permissions import BasePermission
 from rest_framework import permissions
-from booking.models import Booking
+from booking.models.booking import Booking
 
 
 class IsOwnerOrReadOnly(BasePermission):

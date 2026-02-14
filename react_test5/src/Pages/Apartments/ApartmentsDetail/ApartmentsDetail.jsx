@@ -82,7 +82,8 @@ const ApartmentsDetail = () => {
 
 
       <div className={styles.reviewsContainer}>
-        <ReviewList apartmentId={apartment.id} />
+        {/* <ReviewList apartmentId={apartment.id} /> */}
+        <ReviewList reviews={apartment.reviews} />
       </div>
     </div>
   );

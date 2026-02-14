@@ -1,19 +1,9 @@
 from django.db import models
 from django.contrib.auth import get_user_model
+from .locations import Locations
+
+
 User = get_user_model()
-
-
-class Locations(models.Model):
-    name = models.CharField(max_length=255)
-    description = models.TextField()
-
-    def __str__(self):
-        return f'{self.name}, {self.pk}'
-
-
-class LocationImg(models.Model):
-    img = models.ImageField(upload_to='images/locations/', null=True, blank=True)
-    location = models.ForeignKey(Locations, related_name='images', on_delete=models.CASCADE)
 
 
 class Apartment(models.Model):
@@ -32,14 +22,6 @@ class Apartment(models.Model):
 class ApartmentImg(models.Model):
     img = models.ImageField(upload_to='images/apartments/', null=True, blank=True)
     apartment = models.ForeignKey(Apartment, related_name='images', on_delete=models.CASCADE)
-
-
-class Review(models.Model):
-    text = models.TextField()
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    apartment = models.ForeignKey(Apartment, on_delete=models.CASCADE)
-    rating = models.PositiveIntegerField()
-    create = models.DateTimeField(auto_now_add=True)
 
 
 class SliderImage(models.Model):

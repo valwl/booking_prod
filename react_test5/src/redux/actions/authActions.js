@@ -5,10 +5,10 @@ import axios from 'axios';
 // const dispatch = useDispatch();
 //const { id } = useSelector((state) => state.auth.user);
 
-export const login = (login, password) => async (dispatch) => {
+export const login = (username, password) => async (dispatch) => {
   try {
     const response = await axios.post('http://127.0.0.1:8080/user_api/login/', {
-      login,
+      username,
       password,
     });
     console.log('Response:', response);
@@ -55,22 +55,50 @@ export const userRegister = (userData) => {
   };
 };
 
-export const logoutUser = (dispatch) => {
-  return (dispatch) => {
+// export const logoutUser =  (dispatch) => {
+//   return (dispatch) => {
+//     localStorage.removeItem('accessToken');
+//     dispatch({ type: 'USER_LOGOUT' });
+//   }; // нужен запрос на сервер для logout
+// };
+
+export const logoutUser = () => async (dispatch, getState) => {
+  const refresh = localStorage.getItem('refreshToken');
+  const access = localStorage.getItem('accessToken');
+
+  try {
+    if (refresh) {
+      await axios.post(
+        'http://127.0.0.1:8080/user_api/logout/',
+        { refresh },
+        {
+          headers: {
+            Authorization: `Bearer ${access}`,
+          },
+        }
+      );
+    }
+  } catch (error) {
+    console.warn('Logout error (ignired):', error);
+  } finally {
     localStorage.removeItem('accessToken');
+    localStorage.removeItem('refreshToken');
+
     dispatch({ type: 'USER_LOGOUT' });
-  };
+  }
 };
 
 export const refreshAccessToken = (id) => async (dispatch) => {
   try {
     const accessToken = localStorage.getItem('accessToken');
+    const refrechToken = localStorage.getItem('refrechToken');
 
     if (!accessToken) throw new Error('Access token not found');
 
     const response = await axios.post(
       'http://127.0.0.1:8080/user_api/token/refresh/',
-      { access: accessToken, user_id: id }
+      //{ access: accessToken, user_id: id }
+      { refresh: refrechToken }
     );
 
     const { access } = response.data;

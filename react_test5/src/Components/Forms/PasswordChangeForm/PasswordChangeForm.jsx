@@ -31,9 +31,9 @@ const PasswordChangeForm = () => {
             },
           }
         );
-        if (response.status === 200) {
+        if (response.status === 204) {
           navigate('/home');
-          alert('user password update success');
+          // alert('user password update success');
         }
         console.log(response);
       } catch (error) {

@@ -3,12 +3,11 @@ import BaseSlider from '../../Slider/BaseSlider/BaseSlider';
 import styles from './BookingCard.module.scss';
 import { useState, useEffect } from 'react';
 import { getApartmentDetail } from '../../../services/apartmentApi';
+import { type } from '@testing-library/user-event/dist/type';
 
 const BookingCard = ({ booking, onMoreDetails }) => {
   const [apartment, setApartment] = useState(null);
   const [loading, setLoading] = useState(true);
-
-  console.log(booking);
 
   useEffect(() => {
     const fetchApartmentData = async () => {
@@ -21,15 +20,16 @@ const BookingCard = ({ booking, onMoreDetails }) => {
         setLoading(false);
       }
     };
+    console.log('');
     fetchApartmentData();
   }, [booking.apartment]);
 
-  if (loading) {
-    return <p>Loading...</p>;
-  }
+  // console.log(booking);
+  // console.log(typeof booking.checkin_day);
+  // console.log(booking.checkin_day, booking.checkin_day.length);
 
   if (!apartment) {
-    return <p>Error loading apartment data</p>;
+    return <p>apartment not found</p>;
   }
 
   return (
@@ -43,8 +43,9 @@ const BookingCard = ({ booking, onMoreDetails }) => {
       <div className={styles.bookingCardContent}>
         <h3 className={styles.bookingCardTitle}>{apartment.title}</h3>
 
-        <p>Check-in: {new Date(booking.checkin_day).toLocaleDateString()}</p>
-        <p>Check-out: {new Date(booking.checkout_day).toLocaleDateString()}</p>
+        <p>Check-in-day: {booking.checkin_day}</p>
+
+        <p>Check-out-day: {booking.checkout_day}</p>
 
         <button
           className={styles.bookingCardButton}

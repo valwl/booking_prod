@@ -1,0 +1,199 @@
+тестирование и запуск
+сборка в одну систему
+
+
+рефакторинг функциональностей:
+
+apartment;
+ - detail (problem withe gate unavailable dates )
+ - create
+ - update
+ - delete
+
+booking;
+
+users;
+ - register
+ - login
+ - logout
+
+
+images проблема с изображениями в best apartments sections
+
+
+
+rest:
+    - calender, blocked days -> server error 5000 / apartment not available -
+(block / unblock dates some errors, need fix)
+
+
+
+    - timer: booking  cancel, server logic
+    - and clinet logic
+
+    - разобраться с сессиями клиента а то с токенами происхолит непонятно что
+
+
+
+    - server delete все лишнее
+
+    - client components refactoring
+
+
+    - stripe : +
+webhook , обработка +
+(websocket ) +
+success / failed payment add +
+
+
+    - daphne запуск +
+    - work with images, (home page) +
+
+
+infrastracture:
+    - вынос конфигураций из проекта в env layer
+    - dockerfile
+    - nginx
+    - тестирование
+    - документация в контексте интервью
+
+
+
+отдельно разобрать stripe как домен
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+class Booking(models.Model):
+
+    ...
+
+
+
+    def get_active_payment(self):
+
+        return (
+
+            self.payments
+
+            .filter(
+
+                status__in=[
+
+                    Payment.STATUS_INITIATED,
+
+                    Payment.STATUS_SESSION_CREATED,
+
+                ]
+
+            )
+
+            .order_by("-created_at")
+
+            .first()
+
+        )
+
+
+
+
+class Payment(models.Model):
+
+    STATUS_INITIATED = "initiated"
+
+    STATUS_SESSION_CREATED = "session_created"
+
+    STATUS_SUCCEEDED = "succeeded"
+
+    STATUS_FAILED = "failed"
+
+    STATUS_EXPIRED = "expired"
+
+
+
+
+def start_or_get_booking_payment(*, booking: Booking) -> str:
+
+    payment = booking.get_active_payment()
+
+
+
+    if payment and payment.stripe_checkout_session_id:
+
+        session = PaymentService.retrieve_checkout_session(
+
+            payment.stripe_checkout_session_id
+
+        )
+
+        if session.status == "open":
+
+            return session.url
+
+
+
+        payment.status = Payment.STATUS_EXPIRED
+
+        payment.save(update_fields=["status"])
+
+
+
+    payment = Payment.objects.create(
+
+        booking=booking,
+
+        amount=booking.total_price,
+
+        status=Payment.STATUS_INITIATED,
+
+    )
+
+
+
+    session = PaymentService.create_checkout_session(booking=booking)
+
+
+
+    payment.stripe_checkout_session_id = session.id
+
+    payment.stripe_payment_intent_id = session.payment_intent
+
+    payment.status = Payment.STATUS_SESSION_CREATED
+
+    payment.save(
+
+        update_fields=[
+
+            "stripe_checkout_session_id",
+
+            "stripe_payment_intent_id",
+
+            "status",
+
+        ]
+
+    )
+
+
+
+    return session.url
+

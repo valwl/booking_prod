@@ -11,7 +11,7 @@ const UserLoginForm = () => {
   const { formData: bookingData } = useSelector((state) => state.booking);
 
   const initialData = {
-    login: '',
+    username: '',
     password: '',
   };
 
@@ -25,7 +25,7 @@ const UserLoginForm = () => {
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      const response = await dispatch(login(formData.login, formData.password));
+      const response = await dispatch(login(formData.username, formData.password));
       console.log('response data', response);
       if (response && response.status === 200) {
         // new
@@ -55,8 +55,8 @@ const UserLoginForm = () => {
           <div className={styles.txt_field}>
             <input
               type="text"
-              name="login"
-              value={formData.login}
+              name="username"
+              value={formData.username}
               onChange={handleChange}
               required
             />

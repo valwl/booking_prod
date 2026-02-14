@@ -5,12 +5,15 @@ from rest_framework import generics, permissions
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.parsers import MultiPartParser, FormParser
 
-from . serializers import (ApartmentCreateSerializers, ReviewSerializers, ApartmentSerializer,
-                           LocationSerializer,  ApartmentUpdateSerializer, SliderImgSerializer, PopularApartmentSerializer)
-from . models import Locations, Apartment, Review, SliderImage, PopularApartment
-from . permissions import IsBookingUser, IsOwnerOrReadOnly
+from ..serializers import ReviewSerializers, ApartmentSerializer, LocationSerializer, SliderImgSerializer, PopularApartmentSerializer
+from ..models.apartments import Locations, Apartment, SliderImage, PopularApartment
+from ..models.reviews import Review
+from ..permissions import IsBookingUser, IsOwnerOrReadOnly
+
+from ..selectors.apartment_queryset import get_user_apartment_list
 
 
+# locatoins не нужно service так как нету сложной бизнес логики
 class LocationListView(generics.ListAPIView):
     queryset = Locations.objects.all()
     serializer_class = LocationSerializer
@@ -21,6 +24,7 @@ class LocationDetailView(generics.RetrieveAPIView):
     serializer_class = LocationSerializer
 
 
+# тут задача  в создании двух сущеостей create apartment + create img
 class ApartmentCreateListView(generics.ListCreateAPIView):
     queryset = Apartment.objects.all()
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
@@ -31,10 +35,12 @@ class ApartmentCreateListView(generics.ListCreateAPIView):
             return ApartmentCreateSerializers
         return ApartmentSerializer
 
+    # скорее всго нужно будет обновить
     def perform_create(self, serializer):
         apartment = serializer.save(user=self.request.user)
         response_serializer = ApartmentCreateSerializers(apartment)
         return Response(response_serializer.data, status=status.HTTP_201_CREATED)
+
 
 
 class UserApartmentList(APIView):
@@ -42,7 +48,7 @@ class UserApartmentList(APIView):
 
     def get(self, request):
         user = request.user
-        apartments = Apartment.objects.filter(user=user)
+        apartments = get_user_apartment_list(user=user)
         serializer = ApartmentSerializer(apartments, many=True, context={'request': request})
         return Response(serializer.data)
 
@@ -52,44 +58,44 @@ class ApartmentDetailView(generics.RetrieveAPIView):
     serializer_class = ApartmentSerializer
 
 
-class ApartmentUpdateView(generics.UpdateAPIView):
-    queryset = Apartment.objects.all()
-    serializer_class = ApartmentUpdateSerializer
-    permission_classes = [IsOwnerOrReadOnly]
+# class ApartmentUpdateView(generics.UpdateAPIView):
+#     queryset = Apartment.objects.all()
+#     serializer_class = ApartmentUpdateSerializer
+#     permission_classes = [IsOwnerOrReadOnly]
+#
+#     def update(self, request, *args, **kwargs):
+#         partial = kwargs.pop('partial', True)
+#         instance = self.get_object()
+#         serializer = self.get_serializer(instance, data=request.data, partial=partial)
+#         serializer.is_valid(raise_exception=True)
+#         self.perform_update(serializer)
+#
+#         return Response(serializer.data, status=status.HTTP_200_OK)
+#
+#
+# class ApartmentDeleteView(generics.DestroyAPIView):
+#     queryset = Apartment.objects.all()
+#     permission_classes = [IsOwnerOrReadOnly]
+#
+#     def destroy(self, request, *args, **kwargs):
+#         instance = self.get_object()
+#         self.perform_destroy(instance)
+#
+#         return Response({
+#             "detail": "Apartment delete success",
+#             "status": status.HTTP_200_OK
+#         }, status=status.HTTP_200_OK)
 
-    def update(self, request, *args, **kwargs):
-        partial = kwargs.pop('partial', True)
-        instance = self.get_object()
-        serializer = self.get_serializer(instance, data=request.data, partial=partial)
-        serializer.is_valid(raise_exception=True)
-        self.perform_update(serializer)
 
-        return Response(serializer.data, status=status.HTTP_200_OK)
-
-
-class ApartmentDeleteView(generics.DestroyAPIView):
-    queryset = Apartment.objects.all()
-    permission_classes = [IsOwnerOrReadOnly]
-
-    def destroy(self, request, *args, **kwargs):
-        instance = self.get_object()
-        self.perform_destroy(instance)
-
-        return Response({
-            "detail": "Apartment delete success",
-            "status": status.HTTP_200_OK
-        }, status=status.HTTP_200_OK)
-
-
-class ReviewCreateView(generics.CreateAPIView):
-    queryset = Review.objects.all()
-    serializer_class = ReviewSerializers
-    permission_classes = [IsAuthenticated, IsBookingUser]
-
-    def perform_create(self, serializer):
-        apartment_id = self.kwargs.get('apartment_id')
-        apartment = Apartment.objects.get(id=apartment_id)
-        serializer.save(user=self.request.user, apartment=apartment)
+# class ReviewCreateView(generics.CreateAPIView):
+#     queryset = Review.objects.all()
+#     serializer_class = ReviewSerializers
+#     permission_classes = [IsAuthenticated, IsBookingUser]
+#
+#     def perform_create(self, serializer):
+#         apartment_id = self.kwargs.get('apartment_id')
+#         apartment = Apartment.objects.get(id=apartment_id)
+#         serializer.save(user=self.request.user, apartment=apartment)
 
 
 

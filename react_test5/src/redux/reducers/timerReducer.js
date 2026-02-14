@@ -1,9 +1,19 @@
-import { START_TIMER, SLEEP, TIMER_TICK } from '../actions/timerActions';
+
+import {
+  START_TIMER,
+  UPDATE_TIME_LEFT,
+  SET_EXPIRE,
+  SET_SLEEP,
+} from '../actions/timerActions';
 
 const initialState = {
   timeLeft: 0,
+
   status: 'SLEEP',
+
   bookingId: null,
+
+  expiresAt: null,
 };
 
 const timerReducer = (state = initialState, action) => {
@@ -11,26 +21,31 @@ const timerReducer = (state = initialState, action) => {
     case START_TIMER:
       return {
         ...state,
-        timeLeft: action.payload.timeLeft,
-        bookingId: action.payload.bookingId,
+
         status: 'RUNNING',
+
+        expiresAt: action.payload.expiresAt,
+
+        bookingId: action.payload.bookingId,
       };
-    case SLEEP:
+
+    case UPDATE_TIME_LEFT:
       return {
         ...state,
-        status: 'SLEEP',
-        bookingId: null,
-        timeLeft: 0,
+
+        timeLeft: action.payload,
       };
-    case TIMER_TICK:
-      if (state.status === 'RUNNING' && state.timeLeft > 0) {
-        return {
-          ...state,
-          timeLeft: state.timeLeft - 1,
-          status: state.timeLeft - 1 === 0 ? 'EXPIRE' : 'RUNNING',
-        };
-      }
-      return state;
+
+    case SET_EXPIRE:
+      return {
+        ...state,
+
+        status: 'EXPIRE',
+      };
+
+    case SET_SLEEP:
+      return initialState;
+
     default:
       return state;
   }

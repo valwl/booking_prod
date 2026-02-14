@@ -7,56 +7,100 @@ import React, {
 import { useDispatch, useSelector } from 'react-redux';
 import {
   runnigTimer,
-  timerTick,
+  updateTimeLeft,
+  setExpire,
   setSleep,
 } from '../../redux/actions/timerActions';
-import { cancelBooking } from '../../services/bookingApi';
+import { handleExpire } from '../handleExpire';
 
-const TimerContext = createContext();
+const TimerContext = createContext(null);
 
 export const TimerProvider = ({ children }) => {
   const dispatch = useDispatch();
-  const { timeLeft, status, bookingId } = useSelector((state) => state.timer);
+  const { timeLeft, status, bookingId, expiresAt } = useSelector(
+    (state) => state.timer
+  );
 
+  /**
+   * 🚀 Запуск таймера
+   */
   const startTimer = useCallback(
-    (duration, bookingId) => {
-      dispatch(runnigTimer({ timeLeft: duration, bookingId }));
+    (durationInSeconds, bookingId) => {
+      const expiresAt = Date.now() + durationInSeconds * 1000;
+      dispatch(
+        runnigTimer({
+          expiresAt,
+          bookingId,
+        })
+      );
     },
     [dispatch]
   );
+
+  /**
+   * 💳 Успешная оплата
+   */
 
   const handleSuccessfulPayment = useCallback(() => {
     dispatch(setSleep());
   }, [dispatch]);
 
+  /**
+   * ⏱ Основной интервал
+   */
+
   useEffect(() => {
-    if (timeLeft > 0 && status === 'RUNNING') {
-      const timer = setInterval(() => {
-        dispatch(timerTick());
-      }, 1000);
+    if (status !== 'RUNNING' || !expiresAt) return;
+    const interval = setInterval(() => {
+      const remaining = Math.max(
+        0,
+        Math.floor((expiresAt - Date.now()) / 1000)
+      );
+      dispatch(updateTimeLeft(remaining));
+      if (remaining === 0) {
+        dispatch(setExpire());
+      }
+    }, 1000);
 
-      return () => clearInterval(timer);
-    } else if (timeLeft === 0 && bookingId && status === 'EXPIRE') {
-      cancelBooking(bookingId);
-      dispatch(setSleep());
-    }
-  }, [timeLeft, status, bookingId, dispatch]);
+    return () => clearInterval(interval);
+  }, [status, expiresAt, dispatch]);
 
-  // const cancelBooking = async (id) => {
-  //   try {
-  //     await fetch(`/api/bookings/${id}/cancel/`, { method: 'POST' });
-  //   } catch (error) {
-  //     console.error('Ошибка при отмене бронирования:', error);
-  //   }
-  // };
+  /**
+   * 🔥 Обработка истечения
+   */
+
+  useEffect(() => {
+    if (status !== 'EXPIRE' || !bookingId) return;
+    const expireBooking = async () => {
+      try {
+        await handleExpire(bookingId);
+      } catch (error) {
+        console.error('Expire failed:', error);
+      } finally {
+        dispatch(setSleep());
+      }
+    };
+    expireBooking();
+  }, [status, bookingId, dispatch]);
 
   return (
     <TimerContext.Provider
-      value={{ startTimer, handleSuccessfulPayment, timeLeft, status }}
+      value={{
+        startTimer,
+        handleSuccessfulPayment,
+        timeLeft,
+        status,
+      }}
     >
       {children}
     </TimerContext.Provider>
   );
 };
 
-export const useTimer = () => useContext(TimerContext);
+export const useTimer = () => {
+  const context = useContext(TimerContext);
+  if (!context) {
+    throw new Error('useTimer must be used inside TimerProvider');
+  }
+  return context;
+};

@@ -53,7 +53,7 @@ class Booking(models.Model):
         null=True,
         blank=True,
         db_index=True
-    ) # expire сразу ставить 30 минут ?
+    ) # expire сразу ставить 30 минут ?, вообще насколтко нужно данное поле ?
     apartment = models.ForeignKey(Apartment, on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     total_price = models.DecimalField(max_digits=10, decimal_places=2)

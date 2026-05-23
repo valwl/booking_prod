@@ -12,8 +12,8 @@ class IsOwnerOrReadOnly(BasePermission):
 
 class IsBookingUser(permissions.BasePermission):
     def has_permission(self, request, view):
-        apartment_id = view.kwargs.get('apartment_id')
+        booking_id = view.kwargs.get('booking_id')
         user = request.user
-        if Booking.objects.filter(apartment_id=apartment_id, user=user, status='complete').exists():
+        if Booking.objects.filter(id=booking_id, user=user, status='complete').exists():
             return True
         return False

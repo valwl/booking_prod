@@ -1,6 +1,5 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
-from django.utils import timezone
 from . manager import CustomUserManager
 
 
@@ -30,16 +29,3 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
 
 
 
-
-class RefreshTokenModels(models.Model):
-    user = models.OneToOneField(CustomUser, on_delete=models.CASCADE)
-    token = models.TextField()
-
-    def __str__(self):
-        return self.user.username
-
-
-    def update_token(self, new_token): # как работает данный метод
-        self.token = new_token
-        self.created_at = timezone.now()
-        self.save()

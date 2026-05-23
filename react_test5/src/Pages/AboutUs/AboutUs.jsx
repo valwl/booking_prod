@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import styles from './AboutUs.module.scss';
-import saganoForest from '../../assets/images/saganoForest.jpeg';
+import saganoForest from './sagradaFamilia2.jpg';
 
 const AboutUs = () => {
   return (

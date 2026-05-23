@@ -7,12 +7,12 @@ from apartments.models.reviews import Review
 def get_apartment_detail(*, apartment_id: int):
     return (
         Apartment.objects
-        .select_related('user', 'location')
+        .select_related('user', 'location') # при получении данных сделать значения user and locatio null
         .prefetch_related(
             'images',
             Prefetch(
                 'review_set',
-                queryset=Review.objects.select_related('user')
+                queryset=Review.objects.select_related('user') # нужно разобрать данный метод
             )
         )
         .get(id=apartment_id)

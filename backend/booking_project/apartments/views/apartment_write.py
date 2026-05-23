@@ -12,13 +12,8 @@ from apartments.services.create_apartment import create_apartment
 from apartments.services.update_apartment import update_apartment
 
 from apartments.permissions import IsOwnerOrReadOnly
-from apartments.serializers import ApartmentDetailSerializer, \
-    ApartmentSerializer, ApartmentUpdateInputSerializer, \
-    ApartmentCreateInputSerializer, PopularApartmentSerializer
-
-
-
-
+from apartments.serializers import  ApartmentSerializer, ApartmentUpdateInputSerializer, \
+    ApartmentCreateInputSerializer
 
 
 class ApartmentDeleteView(generics.DestroyAPIView):
@@ -28,6 +23,9 @@ class ApartmentDeleteView(generics.DestroyAPIView):
     def destroy(self, request, *args, **kwargs):
         instance = self.get_object()
         self.perform_destroy(instance)
+        print(Response({
+            "detail": "Apartment delete success"
+        }, status=status.HTTP_200_OK))
 
         return Response({
             "detail": "Apartment delete success"

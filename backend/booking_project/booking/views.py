@@ -69,19 +69,18 @@ class BookingViewSet(viewsets.ViewSet):
             status=status.HTTP_201_CREATED,
         )
 
-    def retrieve(self, request, pk=None):
+    def retrieve(self, pk=None):
         booking = get_booking_by_id(pk)
         serializer = BookingDetailSerializer(booking)
         return Response(serializer.data)
 
-# method=['post']
+
 
     @action(detail=True, methods=['post'])
-    def cancel(self, request, pk=None):
+    def cancel(self, pk=None):
         """
         cancel booking
         """
-        # booking = get_booking_by_id(pk, user=request.user)
         booking = get_booking_by_id(pk)
         cancel_booking(booking=booking)
         return Response(
@@ -93,11 +92,11 @@ class BookingViewSet(viewsets.ViewSet):
 
 
     @action(detail=True, methods=['post'])
-    def pay(self, request, pk=None):
+    def pay(self, pk=None):
         """
         get payment url
         """
-        booking = get_booking_by_id(pk, user=request.user)
+        booking = get_booking_by_id(pk)
         if booking.status == 'pending':
             checkout_url = start_or_get_booking_payment(booking=booking)
             return Response({'checkout_url': checkout_url}, status=status.HTTP_200_OK)
@@ -106,7 +105,7 @@ class BookingViewSet(viewsets.ViewSet):
 
 
 @api_view(["GET"])
-def get_apartment_availability(request, apartment_id):
+def get_apartment_availability( apartment_id):
     """
     Returns availability calendar for apartment
     """
@@ -123,6 +122,3 @@ def get_apartment_availability(request, apartment_id):
     serializer = AvailabilitySerializer(availability)
     return Response(serializer.data, status=status.HTTP_200_OK)
 
-
-# список задас что остается
-# 1. payment закрыли страницу нужен url

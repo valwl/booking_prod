@@ -30,7 +30,6 @@ class TokenService:
         except TokenError:
             raise ValueError("Invalid refresh token")
 
-# нужен ли данный метод и если да то для чего
     @staticmethod
     def validate_refresh(refresh_token: str) -> bool:
         try:

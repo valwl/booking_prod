@@ -14,8 +14,9 @@ from pathlib import Path
 from datetime import timedelta
 import os
 from celery.schedules import crontab
-from dotenv import load_dotenv
-load_dotenv()
+
+# from dotenv import load_dotenv
+# load_dotenv()
 
 print(f"DJANGO_SETTINGS_MODULE is set to: {os.getenv('DJANGO_SETTINGS_MODULE')}")
 
@@ -86,7 +87,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'debug_toolbar.middleware.DebugToolbarMiddleware',
+    # 'debug_toolbar.middleware.DebugToolbarMiddleware',
 
 
 
@@ -278,7 +279,7 @@ CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
 CELERY_TIMEZONE = 'UTC'
 
-INSTALLED_APPS += ['django_celery_beat']
+# INSTALLED_APPS += ['django_celery_beat']
 CELERY_BEAT_SCHEDULE = {
     "complete_finishing_booking_evry_night": {
         "task": 'booking.task.complete_finished_bookings',

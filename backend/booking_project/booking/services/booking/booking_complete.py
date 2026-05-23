@@ -1,10 +1,9 @@
-# booking/services/booking/state_transitions.py
 from django.utils import timezone
 from booking.models.booking import Booking
 
 from booking.selectors.booking_selectors import get_booking_by_id
 
-
+# как подключать celery beat ?
 def complete_booking(*, booking_id: int):
     booking = get_booking_by_id(booking_id)
     if booking.status != Booking.STATUS_PAID:

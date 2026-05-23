@@ -1,10 +1,11 @@
 from django.urls import path
+
 from apartments.views.apartment_read import UserApartmentList, ApartmentDetailView, PopularApartmentList
 from apartments.views.apartment_write import ApartmentDeleteView, ApartmentCreateListView, ApartmentUpdateView
 from apartments.views.locations import LocationListView, LocationDetailView
 from apartments.views.review import ReviewCreateView
 from apartments.views.sliders import ImagesForClientSlider
-from apartments.views.old_view import ApartmentReviewView
+
 
 
 urlpatterns = [
@@ -21,9 +22,8 @@ urlpatterns = [
 
     path('slider_image/', ImagesForClientSlider.as_view(), name='image_for_slider'),
 
-    path('create_review/<int:apartment_id>/', ReviewCreateView.as_view(), name='create_review'),
-    path('apartments/<int:pk>/reviews/', ApartmentReviewView.as_view(), name='get_apartment_review')
+
+    path('create_review/<int:booking_id>/', ReviewCreateView.as_view(), name='create_review')
 
 ]
 
-# path('apartments/<int:apartment_id>/reviews/', views.ApartmentReviewView.as_view(), name='apartment_reviews'),

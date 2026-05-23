@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import styles from './SaveBooking.module.scss';
-import sagradaFamilia2 from '../../assets/images/sagradaFamilia2.jpg';
+import sagradaFamilia2 from './saganoForest.jpeg';
 
 const SaveBooking = () => {
   return (

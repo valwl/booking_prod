@@ -16,3 +16,4 @@ def handle_stripe_event(event):
 
     # другие события можно добавлять безопасно
     # опчему сообшение все равно оправляется если не обрабатывается success payment
+    # что происходит mark_booking_payment_failed кейс вызова метода

@@ -10,7 +10,6 @@ def mark_booking_as_paid(booking_id):
     booking = get_booking_by_id(booking_id)
     if booking.status != Booking.STATUS_PENDING:
         return
-    #booking.status = 'paid'
     booking.status = Booking.STATUS_PAID
     booking.save(update_fields=['status'])
     async_to_sync(channel_layer.group_send)(

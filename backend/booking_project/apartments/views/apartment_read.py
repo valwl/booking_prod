@@ -8,9 +8,7 @@ from apartments.selectors.apartment_queryset import get_user_apartment_list, get
 from apartments.models.apartments import Apartment, PopularApartment
 
 from apartments.serializers import ApartmentDetailSerializer, \
-    ApartmentSerializer, ApartmentUpdateInputSerializer, \
-    ApartmentCreateInputSerializer, PopularApartmentSerializer
-
+    ApartmentSerializer, PopularApartmentSerializer
 
 
 class UserApartmentList(APIView):
@@ -31,9 +29,6 @@ class ApartmentDetailView(APIView):
             context={'request': request}
         )
         return Response(serializer.data, status=status.HTTP_200_OK)
-
-
-
 
 
 class PopularApartmentList(generics.ListAPIView):

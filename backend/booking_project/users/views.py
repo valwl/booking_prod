@@ -5,7 +5,7 @@ from rest_framework.permissions import AllowAny, IsAuthenticated
 
 
 from .serializers import LoginSerializer, UserRegisterSerializer, \
-    PasswordChangeSerializer, UserSerializer, UserPublicSerializer, \
+    PasswordChangeSerializer, UserSerializer, \
     UserUpdateSerializer
 from .services.auth_service import AuthService
 from .services.token_service import TokenService
@@ -24,7 +24,7 @@ class RegisterView(APIView):
         return Response(
             {
                 "tokens": tokens,
-                "user": UserPublicSerializer(user).data
+                "user": UserSerializer(user).data
             },
             status=status.HTTP_201_CREATED
         )
@@ -36,7 +36,6 @@ class LoginView(APIView):
     def post(self, request):
         serializer = LoginSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        print(serializer.errors)
         user = AuthService.login(
             credential=serializer.validated_data['username'],
             password=serializer.validated_data['password'],

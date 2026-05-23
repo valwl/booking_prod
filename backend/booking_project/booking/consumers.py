@@ -15,13 +15,7 @@ class BookingStatusConsumer(AsyncWebsocketConsumer):
 
         self.booking_id = self.scope["url_route"]["kwargs"]["booking_id"]
         self.group_name = f"booking_{self.booking_id}"
-        print("client connect form booking", self.booking_id)
 
-        # уточнить корректность получения токена
-        # как сделать аутентификацию по токену, тут аутентификвцию юудет делать не middleware а в ручную
-
-        # query_string = self.scope["query_string"].decode()
-        # params = parse_qs(query_string)
         params = parse_qs(self.scope["query_string"].decode())
         token = params.get("token", [None])[0]
 
@@ -73,6 +67,3 @@ class BookingStatusConsumer(AsyncWebsocketConsumer):
 
         }))
 
-# тип сообщения на стороне канала  что это значит
-# а где мы используем send_status_update
-# конфигурация django Chanels в это и как посмотреть

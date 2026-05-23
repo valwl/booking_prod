@@ -6,10 +6,6 @@ from booking.models.booking import Booking
 channel_layer = get_channel_layer()
 
 
-
-# PENDING → PAYMENT_FAILED → (retry) → PAID / CANCELLED
-
-
 def mark_booking_payment_failed(*, booking, reason: str = "payment_failed"):
     if booking.status != Booking.STATUS_PENDING:
         return

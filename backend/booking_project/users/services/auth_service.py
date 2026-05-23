@@ -26,5 +26,3 @@ class AuthService:
             last_name=last_name,
 
         )
-
-    # куда относиться logout к auth_service ot token_service

@@ -1,19 +1,25 @@
-FROM node:18
+# STAGE 1 — build frontend
 
+FROM node:20 AS build
 
+WORKDIR /app
 
-WORKDIR /booking_project
+COPY package*.json ./
 
-
-
-COPY package.json package-lock.json ./
-
-RUN npm install --legacy-peer-deps
-
-
+RUN npm install
 
 COPY . .
 
+RUN npm run build
+
+# STAGE 2 — nginx runtime
+
+FROM nginx:alpine
+
+COPY nginx.conf /etc/nginx/nginx.conf
+
+COPY --from=build /app/build /usr/share/nginx/html
 
 
-CMD ["npm", "start"]
+
+

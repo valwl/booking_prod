@@ -6,20 +6,24 @@ __pycache__/
 
 *.pyd
 
-
-
 .env
-
-.env.*
 
 venv/
 
+.venv/
 
+node_modules/
 
-.git/
+.git
 
 .gitignore
 
+media/
+
+db.sqlite3
+
+pytest_cache/
+
+.mypy_cache/
 
 
-node_modules/

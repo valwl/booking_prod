@@ -15,10 +15,10 @@ from datetime import timedelta
 import os
 from celery.schedules import crontab
 
-# from dotenv import load_dotenv
-# load_dotenv()
+from dotenv import load_dotenv
+load_dotenv()
 
-print(f"DJANGO_SETTINGS_MODULE is set to: {os.getenv('DJANGO_SETTINGS_MODULE')}")
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -28,12 +28,22 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-%gq1iuk=!33c&=j7@x)vp1-nz1)gdbv$rznw4#3+f4cz2-n2y@'
+# SECRET_KEY = 'django-insecure-%gq1iuk=!33c&=j7@x)vp1-nz1)gdbv$rznw4#3+f4cz2-n2y@'
+SECRET_KEY = os.getenv("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
 
-ALLOWED_HOSTS = ['6d69-2603-8000-b4f0-6fe0-712f-7d0c-1d17-d80b.ngrok-free.app', 'localhost', '127.0.0.1']
+DEBUG = os.getenv("DEBUG", "False") == "True"
+
+ALLOWED_HOSTS = os.getenv(
+
+    "ALLOWED_HOSTS",
+
+    "127.0.0.1,localhost"
+
+).split(",")
+
+
 
 
 
@@ -73,7 +83,7 @@ CHANNEL_LAYERS = {
         # "BACKEND": "channels.layers.InMemoryChannelLayer"
         "BACKEND": "channels_redis.core.RedisChannelLayer",
         "CONFIG": {
-            "hosts": [("127.0.0.1", 6379)],  # Адрес и порт вашего Redis сервера
+            "hosts": [os.getenv("REDIS_URL")],  # Адрес и порт вашего Redis сервера
         },
     },
 }
@@ -87,7 +97,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    # 'debug_toolbar.middleware.DebugToolbarMiddleware',
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
 
 
 
@@ -220,41 +230,7 @@ REST_FRAMEWORK = {
 SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(minutes=10),
     "REFRESH_TOKEN_LIFETIME": timedelta(days=7),
-    "ROTATE_REFRESH_TOKENS": False,
-    "BLACKLIST_AFTER_ROTATION": False,
-    "UPDATE_LAST_LOGIN": False,
-
-    "ALGORITHM": "HS256",
-    "SIGNING_KEY": SECRET_KEY,
-    "VERIFYING_KEY": "",
-    "AUDIENCE": None,
-    "ISSUER": None,
-    "JSON_ENCODER": None,
-    "JWK_URL": None,
-    "LEEWAY": 0,
-
     "AUTH_HEADER_TYPES": ("Bearer",),
-    "AUTH_HEADER_NAME": "HTTP_AUTHORIZATION",
-    "USER_ID_FIELD": "id",
-    "USER_ID_CLAIM": "user_id",
-    "USER_AUTHENTICATION_RULE": "rest_framework_simplejwt.authentication.default_user_authentication_rule",
-
-    "AUTH_TOKEN_CLASSES": ("rest_framework_simplejwt.tokens.AccessToken",),
-    "TOKEN_TYPE_CLAIM": "token_type",
-    "TOKEN_USER_CLASS": "rest_framework_simplejwt.models.TokenUser",
-
-    "JTI_CLAIM": "jti",
-
-    "SLIDING_TOKEN_REFRESH_EXP_CLAIM": "refresh_exp",
-    "SLIDING_TOKEN_LIFETIME": timedelta(minutes=5),
-    "SLIDING_TOKEN_REFRESH_LIFETIME": timedelta(days=1),
-
-    "TOKEN_OBTAIN_SERIALIZER": "rest_framework_simplejwt.serializers.TokenObtainPairSerializer",
-    "TOKEN_REFRESH_SERIALIZER": "rest_framework_simplejwt.serializers.TokenRefreshSerializer",
-    "TOKEN_VERIFY_SERIALIZER": "rest_framework_simplejwt.serializers.TokenVerifySerializer",
-    "TOKEN_BLACKLIST_SERIALIZER": "rest_framework_simplejwt.serializers.TokenBlacklistSerializer",
-    "SLIDING_TOKEN_OBTAIN_SERIALIZER": "rest_framework_simplejwt.serializers.TokenObtainSlidingSerializer",
-    "SLIDING_TOKEN_REFRESH_SERIALIZER": "rest_framework_simplejwt.serializers.TokenRefreshSlidingSerializer",
 }
 
 
@@ -268,10 +244,10 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
+REDIS_URL = os.getenv("REDIS_URL")
 
-
-CELERY_BROKER_URL = 'redis://localhost:6379/0'
-CELERY_RESULT_BACKEND = 'redis://localhost:6379/0'
+CELERY_BROKER_URL = os.getenv("CELERY_BROKER_URL")
+CELERY_RESULT_BACKEND = os.getenv("CELERY_RESULT_BACKEND")
 
 
 CELERY_ACCEPT_CONTENT = ['json']
@@ -291,33 +267,17 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend',
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-EMAIL_HOST_USER = 'ваш_email@gmail.com'
-EMAIL_HOST_PASSWORD = 'ваш_пароль'
 
-STRIPE_PUBLIC_KEY = 'pk_test_51NwzRzEoF28QzXkJWP2wxv7dHcCqcLV3AQmIy2wUBPjyhz9oo2WlqST3y5i819uKXp9ck8sGTXmsvlIeqphfEWFR00t7v0GCPw'
-
+EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
 
 
+
+STRIPE_PUBLIC_KEY = os.getenv('STRIPE_PUBLIC_KEY')
 STRIPE_WEBHOOK_SECRET = os.getenv('STRIPE_WEBHOOK_SECRET')
 STRIPE_SECRET_KEY = os.getenv('STRIPE_SECRET_KEY')
 
-# CELERY_BEAT_SCHEDULE = {
-#     "expire-pending-bookings-every-5-minutes": {
-#         "task": "booking.tasks.expire_pending_bookings",
-#         "schedule": 300,
-#     },
-#     "complete-bookings-every-hour": {
-#         "task": "booking.tasks.complete_finished_bookings",
-#         "schedule": 3600,
-#     },
-# }
 
 
-# celery run
 
-#celery -A backend worker -l info
-#celery -A backend beat -l info
 
-#Или одним процессом
-
-#celery -A backend worker -B -l info

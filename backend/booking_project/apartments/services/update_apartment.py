@@ -3,8 +3,9 @@ from apartments.models.apartments import Apartment, ApartmentImg
 
 
 @transaction.atomic
-def update_apartment(*, apartment, data):
-    new_images = data.pop('images', [])
+def update_apartment(*, apartment, data, request):
+    # new_images = data.pop('images', [])
+    new_images = request.FILES.getlist("images")
     removed_images = data.pop('removed_images', [])
 
     # update scalar fields
@@ -20,3 +21,5 @@ def update_apartment(*, apartment, data):
         for image in new_images
     ])
     return apartment
+
+

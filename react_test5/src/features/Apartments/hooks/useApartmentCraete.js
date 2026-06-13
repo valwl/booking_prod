@@ -72,13 +72,12 @@ export const useApartmentCreate = () => {
       const response = await apartmentCreate(formDataToSend);
       console.log('Apartment successfully added', response);
       setFormData(initialData);
-      navigate('/');
-
-      //toast.success('Apartment successfully created!');
+      // navigate('/');
 
       if (response.status === 201) {
         navigate('/');
-        console.alert('appartment create successufule');
+        toast.success('Apartment successfully created!');
+        // console.alert('appartment create successufule');
       }
 
       // setTimeout(() => {

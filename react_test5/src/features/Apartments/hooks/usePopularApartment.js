@@ -1,6 +1,7 @@
 import { useNavigate } from 'react-router';
 import { useState, useEffect } from 'react';
 import api from '../../../shared/lib/axiosInstance';
+import { publickApi } from '../../shared/lib/axiosInstance';
 
 export const usePopularApartment = () => {
   const navigate = useNavigate();
@@ -9,7 +10,9 @@ export const usePopularApartment = () => {
   useEffect(() => {
     const fetchPopularApartment = async () => {
       try {
-        const response = await api.get('/apartments_api/popular_apartment/');
+        const response = await publickApi.get(
+          '/apartments_api/popular_apartment/'
+        );
 
         const processedData = response.data.map((apartment) => ({
           ...apartment,

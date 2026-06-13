@@ -2,7 +2,7 @@ import axios from 'axios';
 
 export const login = (username, password) => async (dispatch) => {
   try {
-    const response = await axios.post('http://127.0.0.1:8080/user_api/login/', {
+    const response = await axios.post('/api/user_api/login/', {
       username,
       password,
     });
@@ -18,7 +18,7 @@ export const userRegister = (userData) => {
   return async (dispatch) => {
     try {
       const response = await axios.post(
-        'http://127.0.0.1:8080/user_api/register/',
+        '/api/user_api/register/',
         userData,
         {
           headers: {
@@ -57,7 +57,7 @@ export const logoutUser = () => async (dispatch, getState) => {
   try {
     if (refresh) {
       await axios.post(
-        'http://127.0.0.1:8080/user_api/logout/',
+        '/api/user_api/logout/',
         { refresh },
         {
           headers: {
@@ -84,7 +84,7 @@ export const refreshAccessToken = (id) => async (dispatch) => {
     if (!accessToken) throw new Error('Access token not found');
 
     const response = await axios.post(
-      'http://127.0.0.1:8080/user_api/token/refresh/',
+      '/api/user_api/token/refresh/',
       { refresh: refrechToken }
     );
 

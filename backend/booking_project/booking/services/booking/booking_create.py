@@ -1,8 +1,10 @@
 from django.db import transaction
+from django.conf import settings
 from booking.models.booking import Booking
 from booking.services.booking.pricing_calculate import calculate_booking_price
 from ..availability_service import AvailabilityService
 from booking.tasks.expire_booking import cancel_unpaid_booking
+
 
 
 @transaction.atomic
@@ -35,7 +37,7 @@ def create_booking(*, user, apartment, checkin, checkout):
     transaction.on_commit(
         lambda: cancel_unpaid_booking.apply_async(
             args=(booking.id,),
-            countdown=30
+            countdown=settings.BOOKING_PAYMENT_TIMEOUT
         )
     )
     return booking

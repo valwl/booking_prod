@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router';
 import api from '../../../shared/lib/axiosInstance';
+import { publickApi } from '../../../shared/lib/axiosInstance';
 
 export const useLocationList = () => {
   const navigate = useNavigate();
@@ -9,9 +10,7 @@ export const useLocationList = () => {
   useEffect(() => {
     const fetchLocations = async () => {
       try {
-        const response = await api.get(
-          '/apartments_api/locations/'
-        );
+        const response = await publickApi.get('/apartments_api/locations/');
         console.log(response);
         setLocations(response.data);
       } catch (error) {
@@ -27,6 +26,6 @@ export const useLocationList = () => {
 
   return {
     locations,
-    handleMoreDetails
-  }
+    handleMoreDetails,
+  };
 };

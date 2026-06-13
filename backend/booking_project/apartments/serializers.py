@@ -82,19 +82,7 @@ class ApartmentCreateInputSerializer(serializers.Serializer):
     )
 
 
-class ApartmentUpdateInputSerializer(serializers.Serializer):
-    title = serializers.CharField(required=False)
-    description = serializers.CharField(required=False)
-    base_price = serializers.DecimalField(max_digits=10, decimal_places=2, required=False)
-    weekend_price = serializers.DecimalField(max_digits=10, decimal_places=2, required=False)
 
-    images = serializers.PrimaryKeyRelatedField(
-        many=True, queryset=ApartmentImg.objects.all(), required=False
-    )
-    removed_images = serializers.ListField(
-        child=serializers.IntegerField(),
-        required=False
-    )
 
 
 class LocationsImgSerializers(serializers.ModelSerializer):
@@ -128,5 +116,33 @@ class PopularApartmentSerializer(serializers.ModelSerializer):
     class Meta:
         model = PopularApartment
         fields = ['id', 'title', 'description', 'base_price', 'weekend_price', 'images']
+
+
+
+class ApartmentUpdateSerializer(serializers.ModelSerializer):
+
+    images = serializers.SerializerMethodField()
+    removed_images = serializers.ListField(
+        child=serializers.IntegerField(),
+        write_only=True,
+        required=False
+    )
+
+    class Meta:
+        model = Apartment
+        fields = [
+            "title",
+            "description",
+            "base_price",
+            "weekend_price",
+            "images",
+            "removed_images",
+        ]
+
+    def get_images(self, instance):
+        return [
+            {"id": img.id, "url": img.img.url}
+            for img in instance.images.all()
+        ]
 
 

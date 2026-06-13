@@ -77,7 +77,7 @@ class BookingViewSet(viewsets.ViewSet):
 
 
     @action(detail=True, methods=['post'])
-    def cancel(self, pk=None):
+    def cancel(self, request, pk=None):
         """
         cancel booking
         """
@@ -105,7 +105,7 @@ class BookingViewSet(viewsets.ViewSet):
 
 
 @api_view(["GET"])
-def get_apartment_availability( apartment_id):
+def get_apartment_availability(request, apartment_id):
     """
     Returns availability calendar for apartment
     """

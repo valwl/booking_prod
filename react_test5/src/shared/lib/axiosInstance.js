@@ -14,8 +14,14 @@ import { logoutUser } from '../../features/User/redux/authActions';
 
 */
 
+export const publickApi = axios.create({
+  baseURL: '/api',
+
+  timeout: 10000,
+});
+
 const api = axios.create({
-  baseURL: 'http://127.0.0.1:8080',
+  baseURL: '/api',
 
   timeout: 10000,
 });
@@ -103,6 +109,8 @@ api.interceptors.response.use(
 
     const { status } = error.response;
 
+    console.log('401 FROM:', originalRequest.url);
+
     // Работаем только с 401
 
     if (status !== 401) {
@@ -143,7 +151,7 @@ api.interceptors.response.use(
       // ⚠️ ВАЖНО: используем ЧИСТЫЙ axios
 
       const { data } = await axios.post(
-        'http://127.0.0.1:8080/user_api/token/refresh/',
+        '/api/user_api/token/refresh/',
 
         { refresh: refreshToken }
       );

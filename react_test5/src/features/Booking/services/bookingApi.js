@@ -1,4 +1,5 @@
 import api from '../../../shared/lib/axiosInstance';
+import { publickApi } from '../../../shared/lib/axiosInstance';
 
 export const createBooking = async (bookingData) => {
   try {
@@ -14,7 +15,7 @@ export const createBooking = async (bookingData) => {
 
 export const getAvailableDate = async (apartmentId) => {
   try {
-    const response = await api.get(
+    const response = await publickApi.get(
       `/booking_api/available_dates/${apartmentId}/`
     );
     return response;

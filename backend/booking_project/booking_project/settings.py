@@ -38,7 +38,6 @@ DEBUG = os.getenv("DEBUG", "False") == "True"
 ALLOWED_HOSTS = os.getenv(
 
     "ALLOWED_HOSTS",
-
     "127.0.0.1,localhost"
 
 ).split(",")
@@ -167,6 +166,19 @@ DATABASES = {
     }
 }
 
+#
+# DATABASES = {
+#
+#     "default": {
+#         "ENGINE": "django.db.backends.postgresql",
+#         "NAME": os.getenv("POSTGRES_DB"),
+#         "USER": os.getenv("POSTGRES_USER"),
+#         "PASSWORD": os.getenv("POSTGRES_PASSWORD"),
+#         "HOST": os.getenv("POSTGRES_HOST"),
+#         "PORT": os.getenv("POSTGRES_PORT"),
+#     }
+# }
+
 
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
@@ -280,4 +292,4 @@ STRIPE_SECRET_KEY = os.getenv('STRIPE_SECRET_KEY')
 
 
 
-
+BOOKING_PAYMENT_TIMEOUT = 1800

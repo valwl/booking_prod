@@ -12,8 +12,8 @@ from apartments.services.create_apartment import create_apartment
 from apartments.services.update_apartment import update_apartment
 
 from apartments.permissions import IsOwnerOrReadOnly
-from apartments.serializers import  ApartmentSerializer, ApartmentUpdateInputSerializer, \
-    ApartmentCreateInputSerializer
+from apartments.serializers import  ApartmentSerializer, ApartmentCreateInputSerializer, \
+    ApartmentUpdateSerializer
 
 
 class ApartmentDeleteView(generics.DestroyAPIView):
@@ -52,11 +52,12 @@ class ApartmentCreateListView(generics.ListCreateAPIView):
 
 class ApartmentUpdateView(generics.UpdateAPIView):
     queryset = Apartment.objects.all()
-    serializer_class = ApartmentUpdateInputSerializer
+    serializer_class = ApartmentUpdateSerializer
     permission_classes = [IsOwnerOrReadOnly]
 
     def perform_update(self, serializer):
         update_apartment(
             apartment=self.get_object(),
-            data=serializer.validated_data
+            data=serializer.validated_data,
+            request=self.request
         )
